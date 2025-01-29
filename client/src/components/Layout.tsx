@@ -1,15 +1,19 @@
-import React from "react";
 import VideoPlayer from "./VideoPlayer";
 import ConfigPanel from "./ConfigPanel";
+import FrameCanvas from "./FrameCanvas";
 
 const Layout: React.FC = () => {
   return (
-    <div className="grid grid-rows-layout grid-cols-layout gap-4 p-4">
-      <div className="row-span-1 col-span-2 bg-white rounded-lg shadow p-4">
+    <div className="grid grid-cols-2 grid-rows-[2fr_1fr] gap-4 p-4 h-screen">
+      <div className="bg-white rounded-lg shadow p-4">
         <VideoPlayer />
       </div>
 
-      <div className="row-span-2 col-span-1 bg-white rounded-lg shadow p-4">
+      <div className="bg-white rounded-lg shadow p-4">
+        <FrameCanvas />
+      </div>
+
+      <div className="bg-white rounded-lg shadow p-4">
         <ConfigPanel />
       </div>
     </div>
