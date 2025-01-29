@@ -1,6 +1,7 @@
 import VideoPlayer from "./VideoPlayer";
 import ConfigPanel from "./ConfigPanel";
 import FrameCanvas from "./FrameCanvas";
+import ResultsTable from "./ResultsTable";
 
 const Layout: React.FC = () => {
   return (
@@ -15,6 +16,10 @@ const Layout: React.FC = () => {
 
       <div className="bg-white rounded-lg shadow p-4">
         <ConfigPanel />
+      </div>
+
+      <div className="bg-white rounded-lg shadow p-4">
+        <ResultsTable />
       </div>
     </div>
   );
