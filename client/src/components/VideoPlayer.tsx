@@ -1,17 +1,18 @@
-import React, { useRef } from 'react';
-import ReactPlayer from 'react-player';
+import React, { useRef } from "react";
+import ReactPlayer from "react-player";
 
 const VideoPlayer: React.FC = () => {
-  const videoRef = useRef<any>(null);
-  
+  const videoRef = useRef<ReactPlayer | null>(null);
+
   return (
-    <div className="video-container">
+    <div className="relative w-full h-0 pb-[56.30%]">
       <ReactPlayer
         ref={videoRef}
-        url=""
+        url="https://www.youtube.com/watch?v=HCO_sMKLQzQ"
         controls
-        width="640px"
-        height="360px"
+        width="100%"
+        height="100%"
+        className="absolute top-0 left-0"
       />
     </div>
   );
