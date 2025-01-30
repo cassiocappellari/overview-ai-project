@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../store";
+import { setConfidence, setIou } from "../store/configSlice";
 
 const ConfigPanel: React.FC = () => {
-  const [iou, setIou] = useState(0.5);
-  const [confidence, setConfidence] = useState(0.5);
+  const dispatch = useDispatch();
+  const iou = useSelector((state: RootState) => state.config.iou);
+  const confidence = useSelector((state: RootState) => state.config.confidence);
 
   const handleSave = () => {
     console.log("IoU:", iou, "Confidence:", confidence);
@@ -20,7 +24,7 @@ const ConfigPanel: React.FC = () => {
           max="1"
           step="0.1"
           value={iou}
-          onChange={(e) => setIou(Number(e.target.value))}
+          onChange={(e) => dispatch(setIou(Number(e.target.value)))}
           className="w-full"
         />
         <div
@@ -39,7 +43,7 @@ const ConfigPanel: React.FC = () => {
           max="1"
           step="0.1"
           value={confidence}
-          onChange={(e) => setConfidence(Number(e.target.value))}
+          onChange={(e) => dispatch(setConfidence(Number(e.target.value)))}
           className="w-full"
         />
         <div
