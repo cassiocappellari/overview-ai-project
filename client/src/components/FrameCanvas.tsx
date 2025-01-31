@@ -29,11 +29,11 @@ const FrameCanvas: React.FC = () => {
             const boundingBox = new Rect({
                 top: 300,
                 left: 50,
-                width: 300,
-                height: 60,
+                width: 80,
+                height: 80,
                 fill: "transparent",
-                stroke: "#07FE3D",
-                strokeWidth: 2
+                stroke: "black",
+                strokeWidth: 2,
             })
 
             const frameImage = new Image()
@@ -58,8 +58,8 @@ const FrameCanvas: React.FC = () => {
             })
 
             canvas.add(boundingBox, predictionImage, predictionText)
+            canvas.moveObjectTo(boundingBox, 1)
         }
-
     }, [canvas])
 
     return <div className="App">
