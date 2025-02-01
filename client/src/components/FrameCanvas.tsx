@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react"
-import { Canvas, Rect, FabricImage, FabricText } from "fabric"
+import { Canvas, Rect, FabricImage, FabricText, Group } from "fabric"
 import frame from "../images/0001.jpg";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
@@ -7,11 +7,33 @@ import { RootState } from "../store";
 const FrameCanvas: React.FC = () => {
     const canvasRef = useRef(null);
     const [canvas, setCanvas] = useState<Canvas | null>(null);
-    const boundingBoxes = useSelector((state: RootState) => state.frameCanvas);
+    const detectionResults = useSelector((state: RootState) => state.frameCanvas);
+    const [fabricObjects, setFabricObjects] = useState<any>([])
 
     useEffect(() => {
-        console.log('boundingBoxes', boundingBoxes)
-    }, [boundingBoxes])
+        const fabricObjectsList = detectionResults.flatMap((detectionResult) => {
+            const boundingBox = new Rect({
+                top: 10,
+                left: detectionResult.box.left,
+                width: detectionResult.box.width,
+                height: detectionResult.box.height,
+                fill: "transparent",
+                stroke: "black",
+                strokeWidth: 2,
+            });
+    
+            const predictionText = new FabricText(detectionResult.class_name, {
+                top: 90,
+                left: detectionResult.box.left,
+                fontSize: 24,
+                fill: 'black',
+            });
+    
+            return [boundingBox, predictionText];
+        });
+    
+        setFabricObjects(fabricObjectsList);
+    }, [detectionResults]);    
 
     useEffect(() => {
         if (canvasRef.current) {
@@ -32,17 +54,7 @@ const FrameCanvas: React.FC = () => {
     }, [])
 
     useEffect(() => {
-        if (canvas) {
-            const boundingBox = new Rect({
-                top: 10,
-                left: 50,
-                width: 80,
-                height: 80,
-                fill: "transparent",
-                stroke: "black",
-                strokeWidth: 2,
-            })
-
+        if (canvas && fabricObjects) {
             const frameImage = new Image()
             frameImage.src = frame
 
@@ -55,17 +67,17 @@ const FrameCanvas: React.FC = () => {
                 hasControls: false,
             })
 
-            const predictionText = new FabricText("Car", {
-                left: 150,
-                top: 250,
-                fontSize: 24,
-                fill: 'black',
+            const canvasGroup = new Group(fabricObjects, {
+                left: 50,
+                hasControls: false,
+                selectable: false,
             })
 
-            canvas.add(boundingBox, predictionImage, predictionText)
-            canvas.moveObjectTo(boundingBox, 1)
+            canvas.add(canvasGroup)
+            canvas.add(predictionImage)
+            canvas.moveObjectTo(canvasGroup, 1)
         }
-    }, [canvas])
+    }, [canvas, fabricObjects])
 
     return <div className="App">
         <div>
