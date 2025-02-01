@@ -9,9 +9,14 @@ const VideoPlayer: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center space-y-4">
+      <h3 className="text-lg font-bold mb-4 text-center">Video Player</h3>
       <div>
-        <label htmlFor="file-upload" className="cursor-pointer text-blue-500">
-          UPLOAD VIDEO
+        <label htmlFor="file-upload" className={`mt-4 p-2 rounded-md ${
+          loading
+            ? "bg-gray-400 cursor-not-allowed cursor-progress"
+            : "bg-sky-500 hover:bg-sky-700 cursor-pointer"
+        }`}>
+          Upload video
         </label>
         <input
           type="file"
@@ -19,6 +24,7 @@ const VideoPlayer: React.FC = () => {
           accept="video/mp4"
           onChange={handleVideoUpload}
           className="hidden"
+          disabled={loading}
         />
       </div>
 
