@@ -1,8 +1,9 @@
 import React, { useRef, useState, useEffect } from "react"
 import { Canvas, Rect, FabricImage, FabricText, Group } from "fabric"
-import frame from "../images/0001.jpg";
+import frame from "../images/1.png";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
+import { BoundingBox } from "../store/frameCanvasSlice";
 
 const FrameCanvas: React.FC = () => {
     const canvasRef = useRef(null);
@@ -11,22 +12,22 @@ const FrameCanvas: React.FC = () => {
     const [fabricObjects, setFabricObjects] = useState<any>([])
 
     useEffect(() => {
-        const fabricObjectsList = detectionResults.flatMap((detectionResult) => {
+        const fabricObjectsList = detectionResults.flatMap((detectionResult: BoundingBox) => {
             const boundingBox = new Rect({
-                top: 10,
+                top: 100,
                 left: detectionResult.box.left,
                 width: detectionResult.box.width,
                 height: detectionResult.box.height,
                 fill: "transparent",
-                stroke: "black",
+                stroke: "yellow",
                 strokeWidth: 2,
             });
     
             const predictionText = new FabricText(detectionResult.class_name, {
                 top: 90,
                 left: detectionResult.box.left,
-                fontSize: 24,
-                fill: 'black',
+                fontSize: 20,
+                fill: 'yellow',
             });
     
             return [boundingBox, predictionText];
@@ -61,8 +62,8 @@ const FrameCanvas: React.FC = () => {
             const predictionImage = new FabricImage(frameImage, {
                 left: 0,
                 top: 0,
-                scaleX: 0.35,
-                scaleY: 0.35,
+                scaleX: 0.16,
+                scaleY: 0.16,
                 selectable: false,
                 hasControls: false,
             })

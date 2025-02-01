@@ -15,7 +15,7 @@ const useSendVideoFrames = () => {
     const frameName = 1;
 
     const requestData = {
-      image_path: `./captured_frames/000${frameName}.jpg`,
+      image_path: `./captured_frames/${frameName}.png`,
       confidence,
       iou,
     };
