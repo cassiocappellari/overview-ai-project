@@ -34,7 +34,7 @@ const FrameCanvas: React.FC = () => {
     useEffect(() => {
         if (canvas) {
             const boundingBox = new Rect({
-                top: 300,
+                top: 10,
                 left: 50,
                 width: 80,
                 height: 80,
@@ -49,15 +49,13 @@ const FrameCanvas: React.FC = () => {
             const predictionImage = new FabricImage(frameImage, {
                 left: 0,
                 top: 0,
-                height: 500,
-                width: 600,
+                scaleX: 0.35,
+                scaleY: 0.35,
                 selectable: false,
                 hasControls: false,
-                hasBorders: false,
-                cornerStrokeColor: "#ff0098"
             })
 
-            const predictionText = new FabricText("Hello", {
+            const predictionText = new FabricText("Car", {
                 left: 150,
                 top: 250,
                 fontSize: 24,
