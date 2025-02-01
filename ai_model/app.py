@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import cv2
 from PIL import Image
@@ -7,9 +8,18 @@ from dataclasses import dataclass
 from flask import Flask, request, jsonify
 from smart_open import open
 from flask_cors import CORS
+import psycopg2
+from dotenv import load_dotenv
+import json
+
+load_dotenv()
 
 app = Flask(__name__)
+url = os.getenv("DATABASE_URL")
 CORS(app)
+
+connection = psycopg2.connect(url)
+cursor = connection.cursor()
 
 @dataclass
 class BBOX:
@@ -117,6 +127,11 @@ class Model:
 
 model = Model("yolov8s")
 
+INSERT_PREDICTION_RESULT = '''
+    INSERT INTO prediction_results (box, class_name, confidence, img_name)
+    VALUES (%s, %s, %s, %s) RETURNING id, box, class_name, confidence, img_name;
+'''
+
 @app.route('/detect', methods=['POST'])
 def detect():
     image_path = request.json['image_path']
@@ -126,8 +141,24 @@ def detect():
         original_img = Image.open(f).convert('RGB')
     predictions = model(original_img, confidence, iou)
     detections = [p.to_dict() for p in predictions]
-
-    return jsonify(detections)
+    inserted_results = []
+    with connection:
+        with connection.cursor() as cursor:
+            for detection in detections:
+                box = json.dumps(detection['box'])
+                class_name = detection['class_name']
+                confidence = detection['confidence']
+                img_name = image_path
+                cursor.execute(INSERT_PREDICTION_RESULT, (box, class_name, confidence, img_name))
+                inserted_row = cursor.fetchone()
+                inserted_results.append({
+                    "id": inserted_row[0],
+                    "box": inserted_row[1],
+                    "class_name": inserted_row[2],
+                    "confidence": inserted_row[3],
+                    "img_name": inserted_row[4]
+                })
+    return jsonify({"data": inserted_results}), 201
 
 @app.route('/health_check', methods=['GET'])
 def health_check():
