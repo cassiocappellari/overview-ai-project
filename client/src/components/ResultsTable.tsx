@@ -16,7 +16,7 @@ const mockResults = [
 const ResultsTable: React.FC = () => {
   return (
     <div>
-      <h3 className="text-lg font-bold mb-4">Last 10 Predictions</h3>
+      <h3 className="text-lg font-bold mb-4 text-center">Last 10 Predictions</h3>
       <table className="table-fixed w-full border-collapse border border-slate-500 text-center">
         <thead>
           <tr>

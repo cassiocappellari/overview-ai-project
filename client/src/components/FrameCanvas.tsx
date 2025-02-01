@@ -70,6 +70,9 @@ const FrameCanvas: React.FC = () => {
     }, [canvas])
 
     return <div className="App">
+        <div>
+            <h3 className="text-lg font-bold mb-4 text-center">Preview Area</h3>
+        </div>
         <canvas id="canvas" ref={ canvasRef } />
     </div>
 };

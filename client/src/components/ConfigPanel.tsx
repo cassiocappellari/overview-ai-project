@@ -19,8 +19,7 @@ const ConfigPanel: React.FC = () => {
 
   return (
     <div className="p-4 bg-white shadow rounded-lg">
-      <h3 className="text-lg font-bold mb-4">Model Settings</h3>
-
+      <h3 className="text-lg font-bold mb-4 text-center">Model Settings</h3>
       <div className="relative w-full">
         <label className="block mb-2">IoU Threshold</label>
         <input
