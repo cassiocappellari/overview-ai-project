@@ -1,68 +1,11 @@
-import React, { useState, useRef, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store";
-import { objectsDetectionRequest } from "../services/pythonApi";
-import { setBoundingBox } from "../store/frameCanvasSlice";
+import React, { useRef } from "react";
+import useHandleVideoUpload from "../hooks/useHandleVideoUpload";
+import useSendVideoFrames from "../hooks/useSendVideoFrames";
 
 const VideoPlayer: React.FC = () => {
-  const [videoUrl, setVideoUrl] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [uploadProgress, setUploadProgress] = useState<number>(0);
   const videoElementRef = useRef<HTMLVideoElement | null>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const dispatch = useDispatch();
-  const confidence = useSelector((state: RootState) => state.configPanel.confidence);
-  const iou = useSelector((state: RootState) => state.configPanel.iou);
-
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file && file.type === "video/mp4") {
-      setLoading(true);
-      const videoUrl = URL.createObjectURL(file);
-      setVideoUrl(videoUrl);
-
-      let progress = 0;
-      const interval = setInterval(() => {
-        progress += 10;
-        setUploadProgress(progress);
-        if (progress >= 100) {
-          clearInterval(interval);
-          setLoading(false);
-        }
-      }, 300);
-    } else {
-      alert("Please upload a valid MP4 video file.");
-    }
-  };
-
-  const captureFrameAndSendToAPI = useCallback(async () => {
-    const frameName = 1
-
-    const requestData = {
-      image_path: `./captured_frames/000${frameName}.jpg`,
-      confidence,
-      iou,
-    };
-    
-    const result = await objectsDetectionRequest(requestData);
-    dispatch(setBoundingBox(result))
-  }, [confidence, iou, dispatch]);
-
-  const handleVideoPlay = () => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-
-    }
-
-    intervalRef.current = setInterval(captureFrameAndSendToAPI, 1000);
-  };
-
-  const handleVideoPause = () => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-  };
+  const { videoUrl, loading, uploadProgress, handleVideoUpload } = useHandleVideoUpload();
+  const { handleVideoPlay, handleVideoPause } = useSendVideoFrames();
 
   return (
     <div className="flex flex-col items-center space-y-4">
@@ -74,7 +17,7 @@ const VideoPlayer: React.FC = () => {
           type="file"
           id="file-upload"
           accept="video/mp4"
-          onChange={handleFileUpload}
+          onChange={handleVideoUpload}
           className="hidden"
         />
       </div>
