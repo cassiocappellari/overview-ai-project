@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import configReducer from "./configSlice";
+import configPanelReducer from "./configPanelSlice";
+import frameCanvasSlice from "./frameCanvasSlice";
 
 export const store = configureStore({
   reducer: {
-    config: configReducer,
+    configPanel: configPanelReducer,
+    frameCanvas: frameCanvasSlice,
   },
 });
 

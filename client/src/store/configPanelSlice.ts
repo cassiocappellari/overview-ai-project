@@ -10,7 +10,7 @@ const initialState: ConfigState = {
   confidence: 0.5,
 };
 
-const configSlice = createSlice({
+const configPanelSlice = createSlice({
   name: "config",
   initialState,
   reducers: {
@@ -23,5 +23,5 @@ const configSlice = createSlice({
   },
 });
 
-export const { setIou, setConfidence } = configSlice.actions;
-export default configSlice.reducer;
+export const { setIou, setConfidence } = configPanelSlice.actions;
+export default configPanelSlice.reducer;
