@@ -1,10 +1,17 @@
 import React, { useRef, useState, useEffect } from "react"
 import { Canvas, Rect, FabricImage, FabricText } from "fabric"
-import busImage from "../images/bus.jpg";
+import frame from "../images/0001.jpg";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 
 const FrameCanvas: React.FC = () => {
     const canvasRef = useRef(null);
     const [canvas, setCanvas] = useState<Canvas | null>(null);
+    const boundingBoxes = useSelector((state: RootState) => state.frameCanvas);
+
+    useEffect(() => {
+        console.log('boundingBoxes', boundingBoxes)
+    }, [boundingBoxes])
 
     useEffect(() => {
         if (canvasRef.current) {
@@ -37,7 +44,7 @@ const FrameCanvas: React.FC = () => {
             })
 
             const frameImage = new Image()
-            frameImage.src = busImage
+            frameImage.src = frame
 
             const predictionImage = new FabricImage(frameImage, {
                 left: 0,
