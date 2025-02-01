@@ -1,11 +1,18 @@
-import React, { useState, useRef } from "react";
-import ReactPlayer from "react-player";
+import React, { useState, useRef, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../store";
+import { objectsDetectionRequest } from "../services/pythonApi";
+import { setBoundingBox } from "../store/frameCanvasSlice";
 
 const VideoPlayer: React.FC = () => {
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
-  const videoRef = useRef<ReactPlayer | null>(null);
+  const videoElementRef = useRef<HTMLVideoElement | null>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const dispatch = useDispatch();
+  const confidence = useSelector((state: RootState) => state.configPanel.confidence);
+  const iou = useSelector((state: RootState) => state.configPanel.iou);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -25,6 +32,34 @@ const VideoPlayer: React.FC = () => {
       }, 300);
     } else {
       alert("Please upload a valid MP4 video file.");
+    }
+  };
+
+  const captureFrameAndSendToAPI = useCallback(async () => {
+    let frameName = 1
+    const requestData = {
+      image_path: `./captured_frames/000${frameName}.jpg`,
+      confidence,
+      iou,
+    };
+    
+    const result = await objectsDetectionRequest(requestData);
+    dispatch(setBoundingBox(result))
+  }, [confidence, iou, dispatch]);
+
+  const handleVideoPlay = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+
+    }
+
+    intervalRef.current = setInterval(captureFrameAndSendToAPI, 1000);
+  };
+
+  const handleVideoPause = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
     }
   };
 
@@ -58,13 +93,15 @@ const VideoPlayer: React.FC = () => {
         )}
 
         {videoUrl && !loading && (
-          <ReactPlayer
-            ref={videoRef}
-            url={videoUrl}
+          <video
+            ref={videoElementRef}
+            src={videoUrl}
             controls
             width="100%"
             height="100%"
             className="absolute top-0 left-0"
+            onPlay={handleVideoPlay}
+            onPause={handleVideoPause}
           />
         )}
       </div>
