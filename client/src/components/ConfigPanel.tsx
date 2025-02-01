@@ -1,15 +1,15 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store";
-import { setConfidence, setIou } from "../store/configSlice";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { setIou, setConfidence } from "../store/configPanelSlice";
 
 const ConfigPanel: React.FC = () => {
   const dispatch = useDispatch();
-  const iou = useSelector((state: RootState) => state.config.iou);
-  const confidence = useSelector((state: RootState) => state.config.confidence);
+  const [configIou, setConfigIou] = useState<number>(0.5)
+  const [configConfidence, setConfigConfidence] = useState<number>(0.5)
 
-  const handleSave = () => {
-    console.log("IoU:", iou, "Confidence:", confidence);
+  const handleSave = async () => {
+    dispatch(setIou(Number(configIou)))
+    dispatch(setConfidence(Number(configConfidence)))
   };
 
   return (
@@ -23,15 +23,15 @@ const ConfigPanel: React.FC = () => {
           min="0.1"
           max="1"
           step="0.1"
-          value={iou}
-          onChange={(e) => dispatch(setIou(Number(e.target.value)))}
+          value={configIou}
+          onChange={(e) => setConfigIou(Number(e.target.value))}
           className="w-full"
         />
         <div
           className="absolute top-10 left-1/2 transform -translate-x-1/2 bg-gray-700 text-white text-xs px-2 py-1 rounded"
-          style={{ left: `${(iou - 0.1) * 100}%` }}
+          style={{ left: `${(configIou - 0.1) * 100}%` }}
         >
-          {iou.toFixed(1)}
+          {configIou.toFixed(1)}
         </div>
       </div>
 
@@ -42,19 +42,23 @@ const ConfigPanel: React.FC = () => {
           min="0.1"
           max="1"
           step="0.1"
-          value={confidence}
-          onChange={(e) => dispatch(setConfidence(Number(e.target.value)))}
+          value={configConfidence}
+          onChange={(e) => setConfigConfidence(Number(e.target.value))}
           className="w-full"
         />
         <div
           className="absolute top-10 left-1/2 transform -translate-x-1/2 bg-gray-700 text-white text-xs px-2 py-1 rounded"
-          style={{ left: `${(confidence - 0.1) * 100}%` }}
+          style={{ left: `${(configConfidence - 0.1) * 100}%` }}
         >
-          {confidence.toFixed(1)}
+          {configConfidence.toFixed(1)}
         </div>
       </div>
 
-      <button onClick={handleSave} className="btn-primary mt-4">
+      <button
+        onClick={handleSave}
+        className="btn-primary mt-4 bg-sky-500 p-2 hover:bg-sky-700 rounded-md"
+        disabled={false}
+      >
         Apply
       </button>
     </div>

@@ -36,7 +36,8 @@ const VideoPlayer: React.FC = () => {
   };
 
   const captureFrameAndSendToAPI = useCallback(async () => {
-    let frameName = 1
+    const frameName = 1
+
     const requestData = {
       image_path: `./captured_frames/000${frameName}.jpg`,
       confidence,
