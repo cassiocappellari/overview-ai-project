@@ -1,16 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setIou, setConfidence } from "../store/configPanelSlice";
 
 const ConfigPanel: React.FC = () => {
   const dispatch = useDispatch();
-  const [configIou, setConfigIou] = useState<number>(0.5)
-  const [configConfidence, setConfigConfidence] = useState<number>(0.5)
-
-  const handleSave = async () => {
-    dispatch(setIou(Number(configIou)))
-    dispatch(setConfidence(Number(configConfidence)))
+  const [configIou, setConfigIou] = useState<number>(0.5);
+  const [configConfidence, setConfigConfidence] = useState<number>(0.5);
+  const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
+  
+  const handleApply = () => {
+    dispatch(setIou(Number(configIou)));
+    dispatch(setConfidence(Number(configConfidence)));
+    setIsButtonDisabled(true);
   };
+
+  useEffect(() => {
+    setIsButtonDisabled(false);
+  }, [configIou, configConfidence]);
 
   return (
     <div className="p-4 bg-white shadow rounded-lg">
@@ -55,9 +61,13 @@ const ConfigPanel: React.FC = () => {
       </div>
 
       <button
-        onClick={handleSave}
-        className="btn-primary mt-4 bg-sky-500 p-2 hover:bg-sky-700 rounded-md"
-        disabled={false}
+        onClick={handleApply}
+        className={`mt-4 p-2 rounded-md ${
+          isButtonDisabled
+            ? "bg-gray-400 cursor-not-allowed"
+            : "bg-sky-500 hover:bg-sky-700"
+        }`}
+        disabled={isButtonDisabled}
       >
         Apply
       </button>
