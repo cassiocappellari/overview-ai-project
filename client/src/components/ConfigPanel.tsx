@@ -1,22 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { setIou, setConfidence } from "../store/configPanelSlice";
+import { RootState } from "../store";
 
 const ConfigPanel: React.FC = () => {
   const dispatch = useDispatch();
-  const [configIou, setConfigIou] = useState<number>(0.5);
-  const [configConfidence, setConfigConfidence] = useState<number>(0.5);
-  const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
-  
-  const handleApply = () => {
-    dispatch(setIou(Number(configIou)));
-    dispatch(setConfidence(Number(configConfidence)));
-    setIsButtonDisabled(true);
-  };
+  const isVideoPlaying = useSelector((state: RootState) => state.videoPlayer.isVideoPlaying);
+  const currentIou = useSelector((state: RootState) => state.configPanel.iou);
+  const currentConfidence = useSelector((state: RootState) => state.configPanel.confidence);
+  const [configIou, setConfigIou] = useState<number>(currentIou);
+  const [configConfidence, setConfigConfidence] = useState<number>(currentConfidence);
+  const isButtonDisabled = isVideoPlaying || (configIou === currentIou && configConfidence === currentConfidence);
 
-  useEffect(() => {
-    setIsButtonDisabled(false);
-  }, [configIou, configConfidence]);
+  const handleApply = () => {
+    dispatch(setIou(configIou));
+    dispatch(setConfidence(configConfidence));
+  };
 
   return (
     <div className="p-4 bg-white shadow rounded-lg">

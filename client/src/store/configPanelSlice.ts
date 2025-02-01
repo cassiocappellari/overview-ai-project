@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface ConfigState {
+interface ConfigPanel {
   iou: number;
   confidence: number;
 }
 
-const initialState: ConfigState = {
+const initialState: ConfigPanel = {
   iou: 0.5,
   confidence: 0.5,
 };

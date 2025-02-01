@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store";
 import { objectsDetectionRequest } from "../services/pythonApi";
 import { setBoundingBox } from "../store/frameCanvasSlice";
+import { setIsVideoPlaying } from "../store/videoPlayerSlice";
 
 const useSendVideoFrames = () => {
   const dispatch = useDispatch();
@@ -24,6 +25,8 @@ const useSendVideoFrames = () => {
   }, [confidence, iou, dispatch]);
 
   const handleVideoPlay = () => {
+    dispatch(setIsVideoPlaying(true))
+
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
@@ -31,6 +34,8 @@ const useSendVideoFrames = () => {
   };
 
   const handleVideoPause = () => {
+    dispatch(setIsVideoPlaying(false))
+
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;

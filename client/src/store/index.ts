@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import configPanelReducer from "./configPanelSlice";
 import frameCanvasSlice from "./frameCanvasSlice";
+import videoPlayerSlice from "./videoPlayerSlice";
 
 export const store = configureStore({
   reducer: {
     configPanel: configPanelReducer,
     frameCanvas: frameCanvasSlice,
+    videoPlayer: videoPlayerSlice,
   },
 });
 
