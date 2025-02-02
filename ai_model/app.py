@@ -218,11 +218,10 @@ def detect():
                     "frame_reference": frame_reference
                 }
                 results.append(parsedResult)
-    return jsonify({"results": results}), 201
+    return jsonify({"data": results}), 201
 
 @app.route('/prediction_results/<int:frame_id>', methods=['GET'])
 def get_prediction_results(frame_id):
-    print(f'frameid {frame_id}')
     with connection.cursor() as cursor:
         cursor.execute(SELECT_PREDICTION_RESULTS, (frame_id,))
         prediction_results = cursor.fetchall()
@@ -238,7 +237,7 @@ def get_prediction_results(frame_id):
                 "created_at": prediction_result[6].isoformat()
             }
             results.append(parsedResult)
-    return jsonify({"results": results}), 200
+    return jsonify({"data": results}), 200
 
 @app.route('/health_check', methods=['GET'])
 def health_check():
