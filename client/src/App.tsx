@@ -1,10 +1,10 @@
 import React from "react";
-import Layout from "./components/Layout";
+import Dashboard from "./components/Dashboard";
 
 const App: React.FC = () => {
   return (
     <div className="bg-blue-100 min-h-screen">
-      <Layout />
+      <Dashboard />
     </div>
   );
 };
