@@ -1,9 +1,10 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Canvas, Rect, FabricImage, FabricText, Group } from "fabric";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store";
 import { BoundingBox } from "../store/frameCanvasSlice";
 import { imageExtensionRemover } from "../utils/imageExtensionRemover";
+import { setFrameId } from "../store/frameIdSlice";
 
 const frames = [
     require("../images/frame_001.png"),
@@ -30,13 +31,13 @@ function extractFileName(path: string | null): string {
 const IMAGE_SCALE = 0.16;
 
 const FrameCanvas: React.FC = () => {
+    const dispatch = useDispatch();
     const canvasRef = useRef(null);
     const [canvas, setCanvas] = useState<Canvas | null>(null);
     const detectionResults = useSelector((state: RootState) => state.frameCanvas);
     const [fabricObjects, setFabricObjects] = useState<any>([]);
     const [selectedFrame, setSelectedFrame] = useState<string | null>(null);
     const [selectedDetections, setSelectedSelectedDetections] = useState<BoundingBox[][]>();
-
     const [hashMap, setHashMap] = useState<Map<string, BoundingBox[][]>>()
 
     useEffect(() => {
@@ -95,9 +96,13 @@ const FrameCanvas: React.FC = () => {
         if (selectedFrame) {
             const frameReference = extractFileName(selectedFrame)
             const boundingBoxes = hashMap?.get(frameReference)
+            if (boundingBoxes) {
+                const frameId = boundingBoxes[0][0].frame_id
+                dispatch(setFrameId(frameId))
+            }
             setSelectedSelectedDetections(boundingBoxes)
         }
-    }, [selectedFrame]);
+    }, [selectedFrame, dispatch, hashMap]);
 
     useEffect(() => {
         const frameRefAndBoundingBoxes: Map<string, BoundingBox[][]> = new Map()
