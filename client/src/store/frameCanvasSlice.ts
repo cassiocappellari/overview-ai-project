@@ -11,14 +11,20 @@ export interface BoundingBox {
   box: Box;
   class_name: string;
   confidence: number
+  created_at: string;
+  frame_id: number;
+  frame_reference: string;
+  id: number;
 };
+
+const initialState: BoundingBox[][] = [];
 
 const frameCanvasSlice = createSlice({
   name: "frameCanvas",
-  initialState: [] as BoundingBox[][],
+  initialState,
   reducers: {
     setBoundingBox: (state, action: PayloadAction<BoundingBox[]>) => {
-      state.splice(0, 1, action.payload)
+      state.push(action.payload)
     },
   },
 });
