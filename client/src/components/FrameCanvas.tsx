@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Canvas, Rect, FabricImage, FabricText, Group } from "fabric";
-import frame from "../images/1.png";
+import frame from "../images/frame_001.png";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import { BoundingBox } from "../store/frameCanvasSlice";

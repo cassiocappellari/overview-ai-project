@@ -10,12 +10,13 @@ const useSendVideoFrames = () => {
   const confidence = useSelector((state: RootState) => state.configPanel.confidence);
   const iou = useSelector((state: RootState) => state.configPanel.iou);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const frameCounter = useRef(1);
 
   const captureFrameAndSendToAPI = useCallback(async () => {
-    const frameName = 1;
+    const frameRef = frameCounter.current++;
 
     const requestData = {
-      image_path: `./captured_frames/${frameName}.png`,
+      image_path: `./captured_frames/frame_00${frameRef}.png`,
       confidence,
       iou,
     };
