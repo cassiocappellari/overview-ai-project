@@ -102,26 +102,26 @@ const ResultsTable: React.FC = () => {
       <table className="table-fixed w-full border-collapse border border-slate-500 text-center text-xs">
         <thead>
           <tr>
+            <th className="border border-slate-600">Frame reference</th>
             <th className="border border-slate-600">Class</th>
             <th className="border border-slate-600">Confidence</th>
             <th className="border border-slate-600">Bounding box (height)</th>
             <th className="border border-slate-600">Bounding box (left)</th>
             <th className="border border-slate-600">Bounding box (top)</th>
             <th className="border border-slate-600">Bounding box (width)</th>
-            <th className="border border-slate-600">Frame reference</th>
             <th className="border border-slate-600">Result date</th>
           </tr>
         </thead>
         <tbody>
           {mockResults.map((result, index) => (
             <tr key={index}>
+              <td className="border border-slate-700">{imageExtensionRemover(result.frame_reference)}</td>
               <td className="border border-slate-700">{result.class_name}</td>
               <td className="border border-slate-700">{(result.confidence * 100).toFixed(2)}%</td>
               <td className="border border-slate-700">{result.box.height}</td>
               <td className="border border-slate-700">{result.box.left}</td>
               <td className="border border-slate-700">{result.box.top}</td>
               <td className="border border-slate-700">{result.box.width}</td>
-              <td className="border border-slate-700">{imageExtensionRemover(result.frame_reference)}</td>
               <td className="border border-slate-700">{dateFormatter(result.created_at)}</td>
             </tr>
           ))}
