@@ -15,14 +15,16 @@ const useSendVideoFrames = () => {
   const captureFrameAndSendToAPI = useCallback(async () => {
     const frameRef = frameCounter.current++;
 
-    const requestData = {
-      image_path: `./captured_frames/frame_00${frameRef}.png`,
-      confidence,
-      iou,
-    };
+    if (frameRef <=10) {
+      const requestData = {
+        image_path: `./captured_frames/frame_00${frameRef}.png`,
+        confidence,
+        iou,
+      };
 
-    const result = await objectsDetectionRequest(requestData);
-    dispatch(setBoundingBox(result));
+      const result = await objectsDetectionRequest(requestData);
+      dispatch(setBoundingBox(result.data));
+    }
   }, [confidence, iou, dispatch]);
 
   const handleVideoPlay = () => {
