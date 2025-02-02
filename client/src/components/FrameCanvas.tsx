@@ -3,30 +3,9 @@ import { Canvas, Rect, FabricImage, FabricText, Group } from "fabric";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store";
 import { BoundingBox } from "../store/frameCanvasSlice";
-import { imageExtensionRemover } from "../utils/imageExtensionRemover";
+import { imageExtensionRemover, extractFileName } from "../utils/stringFormatter";
 import { setFrameId } from "../store/frameIdSlice";
-
-const frames = [
-    require("../images/frame_001.png"),
-    require("../images/frame_002.png"),
-    require("../images/frame_003.png"),
-    require("../images/frame_004.png"),
-    require("../images/frame_005.png"),
-    require("../images/frame_006.png"),
-    require("../images/frame_007.png"),
-    require("../images/frame_008.png"),
-    require("../images/frame_009.png"),
-    require("../images/frame_0010.png"),
-];
-
-function extractFileName(path: string | null): string {
-    if (path) {
-        const match = path.match(/\/static\/media\/(.*?)(?=\.\w+)/);
-        return match ? match[1] : '';
-    }
-
-    return ''
-  }
+import { frames } from "../utils/frames";
 
 const IMAGE_SCALE = 0.16;
 
@@ -155,24 +134,32 @@ const FrameCanvas: React.FC = () => {
 
     return (
         <div className="App">
-            <div>
-                <h3 className="text-lg font-bold mb-4 text-center">Preview Area</h3>
+            <div className="text-center">
+                <h3 className="text-lg font-bold mb-4">Preview Area</h3>
+                <span>{extractFileName(selectedFrame)}</span>
             </div>
             <canvas id="canvas" ref={canvasRef} />
 
             <div className="mt-8">
                 <h3 className="text-m font-bold text-center mb-4">Select a Frame</h3>
-                <div className="flex overflow-x-auto space-x-4 justify-center">
-                    {frames.map((frameSrc, index) => (
-                        <img
-                            key={index}
-                            src={frameSrc}
-                            alt={`Frame ${index + 1}`}
-                            className="w-20 h-20 object-cover cursor-pointer"
-                            onClick={() => handleFrameClick(frameSrc)}
-                        />
-                    ))}
-                </div>
+
+                {detectionResults.length === 0 ? (
+                    <div className="flex items-center justify-center w-full h-24 border-2 border-dashed text-gray-500">
+                        <span>No frames available</span>
+                    </div>
+                ) : (
+                    <div className="flex overflow-x-auto space-x-4 justify-center">
+                        {frames.map((frameSrc, index) => (
+                            <img
+                                key={index}
+                                src={frameSrc}
+                                alt={`Frame ${index + 1}`}
+                                className="w-20 h-20 object-cover cursor-pointer"
+                                onClick={() => handleFrameClick(frameSrc)}
+                            />
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );
