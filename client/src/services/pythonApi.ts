@@ -17,3 +17,13 @@ export const objectsDetectionRequest = async (data: ObjectsDetectionRequest) => 
     throw error;
   }
 };
+
+export const getPredictionResults = async (frameId: number) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/prediction_results/${frameId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error sending detection request:", error);
+    throw error;
+  }
+};
