@@ -1,6 +1,6 @@
 import React from "react";
 import { dateFormatter } from "../utils/dateFormatter";
-import { imageExtensionRemover } from "../utils/imageExtensionRemover";
+import { imageExtensionRemover } from "../utils/stringFormatter";
 import { useGetPredictionResults } from "../hooks/useGetPredictionResults";
 
 const ResultsTable: React.FC = () => {
@@ -8,7 +8,7 @@ const ResultsTable: React.FC = () => {
 
   return (
     <div>
-      <h3 className="text-lg font-bold mb-4 text-center">Last 10 Predictions</h3>
+      <h3 className="text-lg font-bold mb-4 text-center">Last 10 Predictions by frame</h3>
       <table className="table-fixed w-full border-collapse border border-slate-500 text-center text-xs">
         <thead>
           <tr>
