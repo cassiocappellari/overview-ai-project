@@ -12,17 +12,17 @@ const IMAGE_SCALE = 0.16;
 const FrameCanvas: React.FC = () => {
     const dispatch = useDispatch();
     const canvasRef = useRef(null);
+    const predictionResults = useSelector((state: RootState) => state.frameCanvas);
     const [canvas, setCanvas] = useState<Canvas | null>(null);
-    const detectionResults = useSelector((state: RootState) => state.frameCanvas);
     const [fabricObjects, setFabricObjects] = useState<any>([]);
     const [selectedFrame, setSelectedFrame] = useState<string | null>(null);
-    const [selectedDetections, setSelectedSelectedDetections] = useState<BoundingBox[][]>();
-    const [hashMap, setHashMap] = useState<Map<string, BoundingBox[][]>>()
+    const [selectedFramePredictions, setSelectedFramePredictions] = useState<BoundingBox[][]>();
+    const [frameRefsAndPredictions, setFrameRefsAndPredictions] = useState<Map<string, BoundingBox[][]>>()
 
     useEffect(() => {
-        if (!selectedDetections) return;
+        if (!selectedFramePredictions) return;
 
-        const fabricObjectsList = selectedDetections[0].flatMap((detectionResult: BoundingBox) => {
+        const fabricObjectsList = selectedFramePredictions[0].flatMap((detectionResult: BoundingBox) => {
             const scaledBox = {
                 left: detectionResult.box.left * IMAGE_SCALE,
                 top: detectionResult.box.top * IMAGE_SCALE,
@@ -51,7 +51,7 @@ const FrameCanvas: React.FC = () => {
         });
 
         setFabricObjects(fabricObjectsList);
-    }, [selectedDetections]);
+    }, [selectedFramePredictions]);
 
     useEffect(() => {
         if (canvasRef.current) {
@@ -74,29 +74,29 @@ const FrameCanvas: React.FC = () => {
     useEffect(() => {
         if (selectedFrame) {
             const frameReference = extractFileName(selectedFrame)
-            const boundingBoxes = hashMap?.get(frameReference)
-            if (boundingBoxes) {
-                const frameId = boundingBoxes[0][0].frame_id
+            const predictions = frameRefsAndPredictions?.get(frameReference)
+            if (predictions) {
+                const frameId = predictions[0][0].frame_id
                 dispatch(setFrameId(frameId))
             }
-            setSelectedSelectedDetections(boundingBoxes)
+            setSelectedFramePredictions(predictions)
         }
-    }, [selectedFrame, dispatch, hashMap]);
+    }, [selectedFrame, dispatch, frameRefsAndPredictions]);
 
     useEffect(() => {
         const frameRefAndBoundingBoxes: Map<string, BoundingBox[][]> = new Map()
 
-        detectionResults.forEach((boundingBoxArray: BoundingBox[]) => {
-            const frameReference = imageExtensionRemover(boundingBoxArray[0].frame_reference);
+        predictionResults.forEach((boundingBoxes: BoundingBox[]) => {
+            const frameReference = imageExtensionRemover(boundingBoxes[0].frame_reference);
             if(frameRefAndBoundingBoxes.has(frameReference)) {
-                frameRefAndBoundingBoxes.get(frameReference)?.push(boundingBoxArray)
+                frameRefAndBoundingBoxes.get(frameReference)?.push(boundingBoxes)
             } else {
-                frameRefAndBoundingBoxes.set(frameReference, [boundingBoxArray])
+                frameRefAndBoundingBoxes.set(frameReference, [boundingBoxes])
             }
         });
 
-        setHashMap(frameRefAndBoundingBoxes)
-    }, [detectionResults]);
+        setFrameRefsAndPredictions(frameRefAndBoundingBoxes)
+    }, [predictionResults]);
 
     useEffect(() => {
         if (canvas && fabricObjects.length > 0 && selectedFrame) {
@@ -114,7 +114,7 @@ const FrameCanvas: React.FC = () => {
 
             const canvasGroup = new Group(fabricObjects, {
                 left: 25,
-                top: 0,
+                top: -10,
                 hasControls: false,
                 selectable: false,
             });
@@ -128,7 +128,7 @@ const FrameCanvas: React.FC = () => {
         }
     }, [canvas, fabricObjects, selectedFrame]);
 
-    const handleFrameClick = (frame: string) => {
+    const handleFrameSelect = (frame: string) => {
         setSelectedFrame(frame);
     };
 
@@ -143,7 +143,7 @@ const FrameCanvas: React.FC = () => {
             <div className="mt-8">
                 <h3 className="text-m font-bold text-center mb-4">Select a Frame</h3>
 
-                {detectionResults.length === 0 ? (
+                {predictionResults.length === 0 ? (
                     <div className="flex items-center justify-center w-full h-24 border-2 border-dashed text-gray-500">
                         <span>No frames available</span>
                     </div>
@@ -155,7 +155,7 @@ const FrameCanvas: React.FC = () => {
                                 src={frameSrc}
                                 alt={`Frame ${index + 1}`}
                                 className="w-20 h-20 object-cover cursor-pointer"
-                                onClick={() => handleFrameClick(frameSrc)}
+                                onClick={() => handleFrameSelect(frameSrc)}
                             />
                         ))}
                     </div>

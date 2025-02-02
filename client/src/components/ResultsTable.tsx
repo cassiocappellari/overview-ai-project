@@ -4,7 +4,7 @@ import { imageExtensionRemover } from "../utils/stringFormatter";
 import { useGetPredictionResults } from "../hooks/useGetPredictionResults";
 
 const ResultsTable: React.FC = () => {
-  const { data = [] } = useGetPredictionResults();
+  const { predictionResults } = useGetPredictionResults();
 
   return (
     <div>
@@ -23,19 +23,19 @@ const ResultsTable: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {data.length > 0 ? (
-            data.slice(0, 10).map((result, index) => (
-              <tr key={result.id || index}>
+          {predictionResults.length > 0 ? (
+            predictionResults.slice(0, 10).map((predictionResult, index) => (
+              <tr key={index}>
                 <td className="border border-slate-700">
-                  {imageExtensionRemover(result.frame_reference)}
+                  {imageExtensionRemover(predictionResult.frame_reference)}
                 </td>
-                <td className="border border-slate-700">{result.class_name}</td>
-                <td className="border border-slate-700">{(result.confidence * 100).toFixed(2)}%</td>
-                <td className="border border-slate-700">{result.box.height}</td>
-                <td className="border border-slate-700">{result.box.left}</td>
-                <td className="border border-slate-700">{result.box.top}</td>
-                <td className="border border-slate-700">{result.box.width}</td>
-                <td className="border border-slate-700">{dateFormatter(result.created_at)}</td>
+                <td className="border border-slate-700">{predictionResult.class_name}</td>
+                <td className="border border-slate-700">{(predictionResult.confidence * 100).toFixed(2)}%</td>
+                <td className="border border-slate-700">{predictionResult.box.height}</td>
+                <td className="border border-slate-700">{predictionResult.box.left}</td>
+                <td className="border border-slate-700">{predictionResult.box.top}</td>
+                <td className="border border-slate-700">{predictionResult.box.width}</td>
+                <td className="border border-slate-700">{dateFormatter(predictionResult.created_at)}</td>
               </tr>
             ))
           ) : (

@@ -5,7 +5,7 @@ import { RootState } from "../store";
 
 export const useGetPredictionResults = () => {
   const frameId = useSelector((state: RootState) => state.frameId);
-  const [data, setData] = useState<any[]>([]);
+  const [predictionResults, setPredictionResults] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -14,17 +14,16 @@ export const useGetPredictionResults = () => {
       setError(null);
       
       try {
-        const results = await getPredictionResults(frameId);
-        // TODO
-        setData(results.results);
+        const result = await getPredictionResults(frameId);
+        setPredictionResults(result.data);
       } catch (err) {
         setError("Failed to fetch prediction results");
       }
     };
 
     fetchResults();
-    setData([])
+    setPredictionResults([])
   }, [frameId]);
 
-  return { data, error };
+  return { predictionResults, error };
 };
