@@ -2,10 +2,10 @@ import React, { useRef, useState, useEffect } from "react";
 import { Canvas, Rect, FabricImage, FabricText, Group } from "fabric";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store";
-import { BoundingBox } from "../store/frameCanvasSlice";
 import { imageExtensionRemover, extractFileName } from "../utils/stringFormatter";
 import { setFrameId } from "../store/frameIdSlice";
 import { frames } from "../utils/frames";
+import { BoundingBox } from "../interfaces";
 
 const IMAGE_SCALE = 0.16;
 
