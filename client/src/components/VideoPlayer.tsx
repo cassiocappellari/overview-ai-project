@@ -37,7 +37,7 @@ const VideoPlayer: React.FC = () => {
 
       <div className="relative w-full h-0 pb-[56.30%]">
         {!videoUrl && !loading && (
-          <div className="absolute top-0 left-0 w-full h-full bg-gray-200 flex items-center justify-center text-gray-600">
+          <div className="absolute top-0 left-0 w-full h-full flex items-center text-gray-500 justify-center border-2 border-dashed">
             <span>No video selected</span>
           </div>
         )}
