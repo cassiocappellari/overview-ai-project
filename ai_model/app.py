@@ -164,6 +164,22 @@ INSERT_PREDICTION_RESULT = '''
     RETURNING id, box, class_name, confidence, frame_id, created_at;
 '''
 
+SELECT_PREDICTION_RESULTS = '''
+    SELECT 
+    pr.id, 
+    pr.box, 
+    pr.class_name, 
+    pr.confidence, 
+    pr.frame_id, 
+    f.frame_reference, 
+    pr.created_at
+    FROM prediction_result pr
+    JOIN frame f ON pr.frame_id = f.id
+    WHERE pr.frame_id = %s
+    ORDER BY pr.created_at DESC
+    LIMIT 10;
+'''
+
 @app.route('/detect', methods=['POST'])
 def detect():
     image_path = request.json['image_path']
@@ -203,6 +219,26 @@ def detect():
                 }
                 results.append(parsedResult)
     return jsonify({"results": results}), 201
+
+@app.route('/prediction_results/<int:frame_id>', methods=['GET'])
+def get_prediction_results(frame_id):
+    print(f'frameid {frame_id}')
+    with connection.cursor() as cursor:
+        cursor.execute(SELECT_PREDICTION_RESULTS, (frame_id,))
+        prediction_results = cursor.fetchall()
+        results = []
+        for prediction_result in prediction_results:
+            parsedResult = {
+                "id": prediction_result[0],
+                "box": prediction_result[1],
+                "class_name": prediction_result[2],
+                "confidence": prediction_result[3],
+                "frame_id": prediction_result[4],
+                "frame_reference": prediction_result[5],
+                "created_at": prediction_result[6].isoformat()
+            }
+            results.append(parsedResult)
+    return jsonify({"results": results}), 200
 
 @app.route('/health_check', methods=['GET'])
 def health_check():
