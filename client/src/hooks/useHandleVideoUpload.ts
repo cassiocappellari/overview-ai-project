@@ -1,12 +1,15 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { sendVideoFrame } from "../services/pythonApi";
 import { removeBase64Prefix } from "../utils/stringFormatter";
+import { setIsVideoLoading } from "../store/videoPlayerSlice";
 
 const VALID_VIDEO_FORMATS = ["video/mp4"];
 
 const useHandleVideoUpload = () => {
+  const dispatch = useDispatch();
+
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
 
   const sendFrameToApi = async (frameBase64: string) => {
@@ -55,7 +58,8 @@ const useHandleVideoUpload = () => {
     const videoFile = event.target.files?.[0];
 
     if (videoFile && VALID_VIDEO_FORMATS.includes(videoFile.type)) {
-      setLoading(true);
+      dispatch(setIsVideoLoading(true));
+
       const url = URL.createObjectURL(videoFile);
       setVideoUrl(url);
 
@@ -66,7 +70,7 @@ const useHandleVideoUpload = () => {
 
         if (uploadVideoProgress >= 100) {
           clearInterval(interval);
-          setLoading(false);
+          dispatch(setIsVideoLoading(false));
         }
       }, 300);
 
@@ -81,7 +85,7 @@ const useHandleVideoUpload = () => {
     }
   };
 
-  return { videoUrl, loading, uploadProgress, handleVideoUpload };
+  return { videoUrl, uploadProgress, handleVideoUpload };
 };
 
 export default useHandleVideoUpload;

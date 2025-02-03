@@ -1,10 +1,13 @@
 import React, { useRef } from "react";
 import useHandleVideoUpload from "../hooks/useHandleVideoUpload";
 import useSendVideoFrames from "../hooks/useSendVideoFrames";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 
 const VideoPlayer: React.FC = () => {
   const videoElementRef = useRef<HTMLVideoElement | null>(null);
-  const { videoUrl, loading, uploadProgress, handleVideoUpload } = useHandleVideoUpload();
+  const isVideoLoading = useSelector((state: RootState) => state.videoPlayer.isVideoLoading);
+  const { videoUrl, uploadProgress, handleVideoUpload } = useHandleVideoUpload();
   const { handleVideoPlay, handleVideoPause } = useSendVideoFrames();
 
   return (
@@ -12,7 +15,7 @@ const VideoPlayer: React.FC = () => {
       <h3 className="text-lg font-bold mb-4 text-center">Video Player</h3>
       <div>
         <label htmlFor="file-upload" className={`mt-4 p-2 rounded-sm ${
-          loading
+          isVideoLoading
             ? "bg-gray-400 cursor-not-allowed cursor-progress"
             : "bg-indigo-700 cursor-pointer"
         }`}>
@@ -24,11 +27,11 @@ const VideoPlayer: React.FC = () => {
           accept="video/mp4"
           onChange={handleVideoUpload}
           className="hidden"
-          disabled={loading}
+          disabled={isVideoLoading}
         />
       </div>
 
-      {loading && (
+      {isVideoLoading && (
         <div className="flex flex-col items-center">
           <div className="spinner-border animate-spin border-4 border-blue-500 border-t-transparent rounded-full w-12 h-12 mb-2" />
           <p>Loading... {uploadProgress}%</p>
@@ -36,13 +39,13 @@ const VideoPlayer: React.FC = () => {
       )}
 
       <div className="relative w-full h-0 pb-[56.30%]">
-        {!videoUrl && !loading && (
+        {!videoUrl && !isVideoLoading && (
           <div className="absolute top-0 left-0 w-full h-full flex items-center text-white justify-center border-2 border-dashed">
             <span>No video selected</span>
           </div>
         )}
 
-        {videoUrl && !loading && (
+        {videoUrl && !isVideoLoading && (
           <video
             ref={videoElementRef}
             src={videoUrl}
