@@ -15,7 +15,7 @@ export const useGetPredictionResults = () => {
       
       try {
         const result = await getPredictionResults(frameId);
-        setPredictionResults(result.data);
+        setPredictionResults(result.data.results);
       } catch (err) {
         setError("Failed to fetch prediction results");
       }

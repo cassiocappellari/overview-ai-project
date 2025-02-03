@@ -23,7 +23,7 @@ const useSendVideoFrames = () => {
       };
 
       const result = await objectsDetectionRequest(requestData);
-      dispatch(setBoundingBox(result.data));
+      dispatch(setBoundingBox(result.data.results));
     }
   }, [confidence, iou, dispatch]);
 

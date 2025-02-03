@@ -14,13 +14,15 @@ interface SendVideoFrameRequest {
 };
 
 interface BoundingBoxApiResponse {
-  data: BoundingBox[]
+  data: {
+    results: BoundingBox[]
+  }
 };
 
 export const objectsDetectionRequest = async (data: ObjectsDetectionRequest): Promise<BoundingBoxApiResponse> => {
   try {
     const response = await axios.post(`${API_BASE_URL}/detect`, data);
-    return response.data;
+    return response;
   } catch (error) {
     console.error("Error sending detection request:", error);
     throw error;
@@ -30,7 +32,7 @@ export const objectsDetectionRequest = async (data: ObjectsDetectionRequest): Pr
 export const getPredictionResults = async (frameId: number): Promise<BoundingBoxApiResponse> => {
   try {
     const response = await axios.get(`${API_BASE_URL}/prediction_results/${frameId}`);
-    return response.data;
+    return response;
   } catch (error) {
     console.error("Error sending detection request:", error);
     throw error;
