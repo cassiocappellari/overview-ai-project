@@ -56,7 +56,7 @@ const FrameCanvas: React.FC = () => {
     useEffect(() => {
         if (canvasRef.current) {
             const initCanvas = new Canvas(canvasRef.current, {
-                width: 590,
+                width: 560,
                 height: 330,
             });
 
@@ -134,17 +134,21 @@ const FrameCanvas: React.FC = () => {
 
     return (
         <div className="App">
-            <div className="text-center">
-                <h3 className="text-lg font-bold mb-4">Preview Area</h3>
-                <span>{extractFileName(selectedFrame)}</span>
+            <div className="p-4 bg-indigo-900 shadow rounded-lg">
+                <div className="text-center">
+                    <h3 className="text-lg font-bold mb-4">Preview Area</h3>
+                    <span>{extractFileName(selectedFrame)}</span>
+                </div>
+                <div>
+                    <canvas id="canvas" ref={canvasRef} />
+                </div>
             </div>
-            <canvas id="canvas" ref={canvasRef} />
 
-            <div className="mt-8">
+            <div className="p-4 bg-indigo-900 shadow rounded-lg mt-8">
                 <h3 className="text-m font-bold text-center mb-4">Select a Frame</h3>
 
                 {predictionResults.length === 0 ? (
-                    <div className="flex items-center justify-center w-full h-24 border-2 border-dashed text-gray-500">
+                    <div className="flex items-center justify-center w-full h-24 border-2 border-dashed text-white">
                         <span>No frames available</span>
                     </div>
                 ) : (

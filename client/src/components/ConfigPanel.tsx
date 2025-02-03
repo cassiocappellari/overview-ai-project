@@ -18,7 +18,7 @@ const ConfigPanel: React.FC = () => {
   };
 
   return (
-    <div className="p-4 bg-white shadow rounded-lg">
+    <div className="p-4 bg-indigo-900 shadow rounded-lg">
       <h3 className="text-lg font-bold mb-4 text-center">Model Settings</h3>
       <div className="relative w-full">
         <label className="block mb-2">IoU Threshold</label>
@@ -60,10 +60,10 @@ const ConfigPanel: React.FC = () => {
 
       <button
         onClick={handleApply}
-        className={`mt-4 p-2 rounded-md ${
+        className={`mt-4 p-2 rounded-sm ${
           isButtonDisabled
-            ? "bg-gray-400 cursor-not-allowed"
-            : "bg-sky-500 hover:bg-sky-700"
+            ? "bg-indigo-400 cursor-not-allowed"
+            : "bg-indigo-700"
         }`}
         disabled={isButtonDisabled}
       >

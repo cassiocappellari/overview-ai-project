@@ -3,7 +3,7 @@ import Dashboard from "./components/Dashboard";
 
 const App: React.FC = () => {
   return (
-    <div className="bg-blue-100 min-h-screen">
+    <div className="bg-white min-h-screen">
       <Dashboard />
     </div>
   );

@@ -8,13 +8,13 @@ const VideoPlayer: React.FC = () => {
   const { handleVideoPlay, handleVideoPause } = useSendVideoFrames();
 
   return (
-    <div className="flex flex-col items-center space-y-4">
+    <div className="flex flex-col items-center space-y-4 p-4 bg-indigo-900 shadow rounded-lg font-sans">
       <h3 className="text-lg font-bold mb-4 text-center">Video Player</h3>
       <div>
-        <label htmlFor="file-upload" className={`mt-4 p-2 rounded-md ${
+        <label htmlFor="file-upload" className={`mt-4 p-2 rounded-sm ${
           loading
             ? "bg-gray-400 cursor-not-allowed cursor-progress"
-            : "bg-sky-500 hover:bg-sky-700 cursor-pointer"
+            : "bg-indigo-700 cursor-pointer"
         }`}>
           Upload video
         </label>
@@ -37,7 +37,7 @@ const VideoPlayer: React.FC = () => {
 
       <div className="relative w-full h-0 pb-[56.30%]">
         {!videoUrl && !loading && (
-          <div className="absolute top-0 left-0 w-full h-full flex items-center text-gray-500 justify-center border-2 border-dashed">
+          <div className="absolute top-0 left-0 w-full h-full flex items-center text-white justify-center border-2 border-dashed">
             <span>No video selected</span>
           </div>
         )}

@@ -7,7 +7,7 @@ const ResultsTable: React.FC = () => {
   const { predictionResults } = useGetPredictionResults();
 
   return (
-    <div>
+    <div className="p-4 bg-indigo-900 shadow rounded-lg">
       <h3 className="text-lg font-bold mb-4 text-center">Last 10 Predictions by frame</h3>
       <table className="table-fixed w-full border-collapse border border-slate-500 text-center text-xs">
         <thead>
