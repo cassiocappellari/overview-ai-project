@@ -13,6 +13,8 @@ from dotenv import load_dotenv
 import json
 import base64
 import io
+from database.queries import CREATE_FRAME_TABLE, CREATE_PREDICTION_RESULT_TABLE
+from controllers.controllers import get_prediction_results_controller, detect_controller
 
 load_dotenv()
 
@@ -126,120 +128,21 @@ class Model:
         predictions = self.postprocess(outputs, confidence_thresh, iou_thresh, img.width, img.height)
         return predictions
 
-
 model = Model("yolov8s")
-
-CREATE_FRAME_TABLE = '''
-    CREATE TABLE IF NOT EXISTS frame (
-    id SERIAL PRIMARY KEY,
-    frame_reference VARCHAR(100) NOT NULL
-);
-'''
-
-CREATE_PREDICTION_RESULT_TABLE = '''
-    CREATE TABLE IF NOT EXISTS prediction_result (
-    id SERIAL PRIMARY KEY,
-    box JSONB NOT NULL,
-    class_name VARCHAR(100) NOT NULL,
-    confidence FLOAT NOT NULL,
-    frame_id INTEGER NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_frame FOREIGN KEY (frame_id) 
-        REFERENCES frame (id) 
-        ON DELETE CASCADE
-);
-'''
 
 cursor.execute(CREATE_FRAME_TABLE)
 cursor.execute(CREATE_PREDICTION_RESULT_TABLE)
 connection.commit()
 
-INSERT_FRAME = '''
-    INSERT INTO frame (frame_reference)
-    VALUES (%s)
-    RETURNING id, frame_reference;
-'''
-
-INSERT_PREDICTION_RESULT = '''
-    INSERT INTO prediction_result (box, class_name, confidence, frame_id)
-    VALUES (%s, %s, %s, %s)
-    RETURNING id, box, class_name, confidence, frame_id, created_at;
-'''
-
-SELECT_PREDICTION_RESULTS = '''
-    SELECT 
-    pr.id, 
-    pr.box, 
-    pr.class_name, 
-    pr.confidence, 
-    pr.frame_id, 
-    f.frame_reference, 
-    pr.created_at
-    FROM prediction_result pr
-    JOIN frame f ON pr.frame_id = f.id
-    WHERE pr.frame_id = %s
-    ORDER BY pr.created_at DESC
-    LIMIT 10;
-'''
-
 @app.route('/detect', methods=['POST'])
 def detect():
-    image_path = request.json['image_path']
-    confidence = request.json['confidence']
-    iou = request.json['iou']
-    frame_reference = os.path.basename(image_path)
-
-    with connection:
-        with connection.cursor() as cursor:
-            cursor.execute(INSERT_FRAME, (frame_reference,))
-            frame = cursor.fetchone()
-            frame_id = frame[0]
-            frame_reference = frame[1]
-
-            with open(image_path, 'rb') as f:
-                original_img = Image.open(f).convert('RGB')
-            predictions = model(original_img, confidence, iou)
-            detections = [p.to_dict() for p in predictions]
-
-            results = []
-            for detection in detections:
-                box = json.dumps(detection['box'])
-                class_name = detection['class_name']
-                confidence = detection['confidence']
-
-                cursor.execute(INSERT_PREDICTION_RESULT, (box, class_name, confidence, frame_id))
-                prediction_result = cursor.fetchone()
-
-                parsedResult = {
-                    "id": prediction_result[0],
-                    "box": prediction_result[1],
-                    "class_name": prediction_result[2],
-                    "confidence": prediction_result[3],
-                    "frame_id": prediction_result[4],
-                    "created_at": prediction_result[5].isoformat(),
-                    "frame_reference": frame_reference
-                }
-                results.append(parsedResult)
+    results = detect_controller()
     return jsonify({"data": results}), 201
 
 @app.route('/prediction_results/<int:frame_id>', methods=['GET'])
 def get_prediction_results(frame_id):
-    with connection.cursor() as cursor:
-        cursor.execute(SELECT_PREDICTION_RESULTS, (frame_id,))
-        prediction_results = cursor.fetchall()
-        results = []
-        for prediction_result in prediction_results:
-            parsedResult = {
-                "id": prediction_result[0],
-                "box": prediction_result[1],
-                "class_name": prediction_result[2],
-                "confidence": prediction_result[3],
-                "frame_id": prediction_result[4],
-                "frame_reference": prediction_result[5],
-                "created_at": prediction_result[6].isoformat()
-            }
-            results.append(parsedResult)
-    return jsonify({"data": results}), 200
+        results = get_prediction_results_controller(frame_id)
+        return jsonify({"data": results}), 200
 
 project_dir = os.path.dirname(os.path.abspath(__file__))
 captured_frames_dir = os.path.join(project_dir, 'captured_frames')
