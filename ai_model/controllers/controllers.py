@@ -100,7 +100,7 @@ def detect_controller():
                 results.append(parsedResult)
 
             connection.commit()
-        return jsonify({"results": results}), 200
+        return jsonify({"results": results}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
