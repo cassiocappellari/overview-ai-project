@@ -10,3 +10,7 @@ export function extractFileName(path: string | null): string {
 
     return ''
 }
+
+export function removeBase64Prefix(base64String: string): string {
+    return base64String.split(',')[1] || base64String;
+};
