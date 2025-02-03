@@ -31,17 +31,17 @@ connection.commit()
 @app.route('/detect', methods=['POST'])
 def detect():
         results = detect_controller()
-        return jsonify({"data": results}), 201
+        return results
 
 @app.route('/prediction_results/<int:frame_id>', methods=['GET'])
 def get_prediction_results(frame_id):
         results = get_prediction_results_controller(frame_id)
-        return jsonify({"data": results}), 200
+        return results
 
 @app.route('/frame', methods=['POST'])
 def receive_frame():
-        receive_frame_controller()
-        return 'Frame successfully received', 200
+        results = receive_frame_controller()
+        return results
 
 @app.route('/health_check', methods=['GET'])
 def health_check():
