@@ -146,25 +146,26 @@ const FrameCanvas: React.FC = () => {
 
             <div className="p-4 bg-indigo-900 shadow rounded-lg mt-8">
                 <h3 className="text-m font-bold text-center mb-4">Select a Frame</h3>
-
                 {predictionResults.length === 0 ? (
                     <div className="flex items-center justify-center w-full h-24 border-2 border-dashed text-white">
-                        <span>No frames available</span>
+                    <span>No frames available</span>
                     </div>
                 ) : (
-                    <div className="flex overflow-x-auto space-x-4 justify-center">
-                        {frames.map((frameSrc, index) => (
+                    <div className="w-full overflow-x-auto rounded-lg">
+                        <div className="flex space-x-4 p-2" style={{ minWidth: "max-content" }}>
+                            {frames.map((frameSrc, index) => (
                             <img
                                 key={index}
                                 src={frameSrc}
                                 alt={`Frame ${index + 1}`}
-                                className="w-20 h-20 object-cover cursor-pointer"
+                                className="w-[140px] h-[80px] object-cover cursor-pointer border border-gray-300 rounded-md"
                                 onClick={() => handleFrameSelect(frameSrc)}
                             />
-                        ))}
+                            ))}
+                        </div>
                     </div>
                 )}
-            </div>
+                </div>
         </div>
     );
 };
