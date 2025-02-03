@@ -5,13 +5,21 @@ from PIL import Image
 from flask import request
 from database.queries import SELECT_PREDICTION_RESULTS, INSERT_FRAME, INSERT_PREDICTION_RESULT
 import json
+import json
+import base64
+import io
+from smart_open import open
 from services.services import Model
 
 load_dotenv()
+
 url = os.getenv("DATABASE_URL")
 connection = psycopg2.connect(url)
 
 model = Model("yolov8s")
+
+project_dir = os.getcwd()
+captured_frames_dir = os.path.join(project_dir, 'captured_frames')
 
 def get_prediction_results_controller(frame_id):
     with connection.cursor() as cursor:
@@ -69,3 +77,27 @@ def detect_controller():
             results.append(parsedResult)
         connection.commit()
     return results
+
+def health_check_controller():
+    if model is None:
+        return "Model is not loaded"
+    return f"Model {model.model_name} is loaded"
+
+def load_model_controller():
+    model_name = request.json['model_name']
+    global model
+    model = Model(model_name)
+    return f"Model {model_name} is loaded"
+
+frame_reference_counter = 1
+
+def receive_frame_controller():
+    global frame_reference_counter
+
+    base64Img = request.json['image']
+    img_data = base64.b64decode(base64Img)
+    img = Image.open(io.BytesIO(img_data))
+    filename = os.path.join(captured_frames_dir, f'frame_00{frame_reference_counter}.png')
+    img.save(filename)
+    frame_reference_counter += 1
+    return
