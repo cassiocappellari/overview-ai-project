@@ -11,7 +11,7 @@ const ResultsTable: React.FC = () => {
       <h3 className="text-lg font-bold mb-4 text-center">Last 10 Predictions by frame</h3>
       <table className="table-fixed w-full border-collapse border border-slate-500 text-center text-xs">
         <thead>
-          <tr>
+          <tr className="bg-indigo-950">
             <th className="border border-slate-600">Frame reference</th>
             <th className="border border-slate-600">Class</th>
             <th className="border border-slate-600">Confidence</th>
@@ -40,7 +40,7 @@ const ResultsTable: React.FC = () => {
             ))
           ) : (
             <tr>
-              <td colSpan={8} className="border border-slate-700 p-4 text-center">
+              <td colSpan={8} className="border border-slate-700 p-4 text-center text-sm">
                 No prediction results available
               </td>
             </tr>
