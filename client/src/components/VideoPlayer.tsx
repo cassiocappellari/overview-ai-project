@@ -8,7 +8,7 @@ const VideoPlayer: React.FC = () => {
   const { handleVideoPlay, handleVideoPause } = useSendVideoFrames();
 
   return (
-    <div className="flex flex-col items-center space-y-4 p-4 bg-indigo-900 shadow rounded-lg font-sans">
+    <div className="flex flex-col items-center space-y-4 p-4 bg-indigo-900 shadow rounded-lg">
       <h3 className="text-lg font-bold mb-4 text-center">Video Player</h3>
       <div>
         <label htmlFor="file-upload" className={`mt-4 p-2 rounded-sm ${
