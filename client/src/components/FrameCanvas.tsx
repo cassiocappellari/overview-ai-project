@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { Canvas, Rect, FabricImage, FabricText, Group } from "fabric";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store";
-import { imageExtensionRemover, extractFileName } from "../utils/stringFormatter";
+import { imageExtensionRemover, extractFileName, getBoundingBoxColors } from "../utils/stringFormatter";
 import { setFrameId } from "../store/frameIdSlice";
 import { frames } from "../utils/frames";
 import { BoundingBox } from "../interfaces";
@@ -31,13 +31,15 @@ const FrameCanvas: React.FC = () => {
                 height: detectionResult.box.height * IMAGE_SCALE,
             };
 
+            const fabricObjectColor = getBoundingBoxColors(detectionResult.class_name);
+
             const boundingBox = new Rect({
                 top: scaledBox.top,
                 left: scaledBox.left,
                 width: scaledBox.width,
                 height: scaledBox.height,
                 fill: "transparent",
-                stroke: "yellow",
+                stroke: fabricObjectColor,
                 strokeWidth: 1,
             });
 
@@ -45,7 +47,7 @@ const FrameCanvas: React.FC = () => {
                 top: scaledBox.top - 20,
                 left: scaledBox.left,
                 fontSize: 16,
-                fill: "yellow",
+                fill: fabricObjectColor,
             });
 
             return [boundingBox, predictionText];

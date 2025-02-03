@@ -1,4 +1,4 @@
-export const imageExtensionRemover = (fileName: string): string => {
+export function imageExtensionRemover(fileName: string): string {
     return fileName.replace(/\.(png|jpg|jpeg)$/, "");
 };
 
@@ -13,4 +13,15 @@ export function extractFileName(path: string | null): string {
 
 export function removeBase64Prefix(base64String: string): string {
     return base64String.split(',')[1] || base64String;
+};
+
+export function getBoundingBoxColors(className: string) {
+    switch (className) {
+      case "car":
+        return "yellow";
+      case "person":
+        return "green";
+      default:
+        return "red";
+    }
 };
