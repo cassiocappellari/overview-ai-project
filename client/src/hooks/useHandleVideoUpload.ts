@@ -13,7 +13,7 @@ const useHandleVideoUpload = () => {
     try {
       const extractedBase64Code = removeBase64Prefix(frameBase64);
       const data = { image: extractedBase64Code };
-      await sendVideoFrame(data); // Send the frame to the backend API
+      await sendVideoFrame(data);
     } catch (error) {
       console.error("Error sending frame:", error);
     }
@@ -22,32 +22,33 @@ const useHandleVideoUpload = () => {
   const extractAndSendFrames = (videoElement: HTMLVideoElement) => {
     const duration = videoElement.duration;
     let currentTime = 0;
-    
-    // Ensure the frame extraction is based on 1 frame per second
-    const frameInterval = setInterval(() => {
+
+    const sendNextFrame = () => {
       if (currentTime < duration) {
         videoElement.currentTime = currentTime;
-        currentTime++;
+      }
 
-        videoElement.onseeked = () => {
-          const canvas = document.createElement("canvas");
-          const context = canvas.getContext("2d");
+      videoElement.onseeked = () => {
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
 
-          if (context) {
-            canvas.width = videoElement.videoWidth;
-            canvas.height = videoElement.videoHeight;
-            context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+        if (context) {
+          canvas.width = videoElement.videoWidth;
+          canvas.height = videoElement.videoHeight;
+          context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
 
-            const base64Frame = canvas.toDataURL("image/png");
-            sendFrameToApi(base64Frame);
+          const base64Frame = canvas.toDataURL("image/png");
+          sendFrameToApi(base64Frame);
+
+          currentTime++;
+          if (currentTime < duration) {
+            setTimeout(sendNextFrame, 1000);
           }
-        };
-      }
+        }
+      };
+    };
 
-      if (currentTime >= duration) {
-        clearInterval(frameInterval); // Stop sending frames after the video ends
-      }
-    }, 1000); // Send 1 frame every second
+    sendNextFrame();
   };
 
   const handleVideoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,7 +60,6 @@ const useHandleVideoUpload = () => {
       setVideoUrl(url);
 
       let uploadVideoProgress = 0;
-
       const interval = setInterval(() => {
         uploadVideoProgress += 10;
         setUploadProgress(uploadVideoProgress);

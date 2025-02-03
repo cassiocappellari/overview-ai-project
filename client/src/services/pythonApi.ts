@@ -40,11 +40,12 @@ export const getPredictionResults = async (frameId: number): Promise<BoundingBox
 };
 
 export const sendVideoFrame = async (data: SendVideoFrameRequest): Promise<void> => {
-  try {
-    const response = await axios.post(`${API_BASE_URL}/frame`, data);
-    return response.data;
-  } catch (error) {
-    console.error("Error sending detection request:", error);
-    throw error;
-  }
+  console.log(data)
+  // try {
+  //   const response = await axios.post(`${API_BASE_URL}/frame`, data);
+  //   return response.data;
+  // } catch (error) {
+  //   console.error("Error sending detection request:", error);
+  //   throw error;
+  // }
 };
