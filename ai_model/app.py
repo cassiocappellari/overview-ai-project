@@ -11,6 +11,8 @@ from flask_cors import CORS
 import psycopg2
 from dotenv import load_dotenv
 import json
+import base64
+import io
 
 load_dotenv()
 
@@ -238,6 +240,23 @@ def get_prediction_results(frame_id):
             }
             results.append(parsedResult)
     return jsonify({"data": results}), 200
+
+project_dir = os.path.dirname(os.path.abspath(__file__))
+captured_frames_dir = os.path.join(project_dir, 'captured_frames')
+
+frame_reference_counter = 1
+
+@app.route('/frame', methods=['POST'])
+def receive_frame():
+    global frame_reference_counter
+
+    base64Img = request.json['image']
+    img_data = base64.b64decode(base64Img)
+    img = Image.open(io.BytesIO(img_data))
+    filename = os.path.join(captured_frames_dir, f'frame_00{frame_reference_counter}.png')
+    img.save(filename)
+    frame_reference_counter += 1
+    return 'Frame successfully received', 200
 
 @app.route('/health_check', methods=['GET'])
 def health_check():
