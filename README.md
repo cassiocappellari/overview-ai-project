@@ -2,12 +2,13 @@
 
 ## 📋 Index
 
-- [Overview](#-overview)
-- [The Task](#-the-task)
-- [Technologies](#-technologies)
-- [Features](#-features)
-- [How To Use](#-how-to-use)
-- [Author](#-author)
+- Overview
+- The Task
+- Technologies
+- Features
+- How To Run
+- Diagrams
+- Author
 
 # Overview
 
@@ -47,7 +48,7 @@ The task is to create a frontend that interfaces with the backend, plays a video
 - Table showing the last 10 prediction results from the selected frame
 - Configuration area for model settings (IoU and Confidence Level)
 
-# 🛠 How to Run
+# How to Run
 
 ```bash
 # Clone this repository
@@ -120,6 +121,20 @@ $ yarn start
 
 http://localhost:3000
 ```
+
+# Diagrams
+
+## Database relation
+
+<img src="./client/assets/database_relation.png">
+
+## API architecture
+
+<img src="./client/assets/api_architecture.png">
+
+## Application flow
+
+<img src="./client/assets/diagram_app_flow.png">
 
 # 👨‍🚀 Author
 
