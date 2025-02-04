@@ -2,21 +2,11 @@
 
 ## 📋 Index
 
-- Overview
-- The Task
 - Technologies
 - Features
 - How To Run
 - Diagrams
 - Author
-
-# Overview
-
-This project is a full-stack application that showcases an AI object detection model's predictions through a user-friendly dashboard. The backend is built with Flask in Python, serving predictions from an ONNX model. The front end is developed using React and Fabric.js, providing an interactive interface to display the detected objects. You can edit any backend files, even changing the API structure.
-
-# The Task
-
-The task is to create a frontend that interfaces with the backend, plays a video file, sends each frame to the API for prediction, and then shows the results on the frontend. The interface should have a video player, a configuration area for model settings to be configured (such as IoU and Confidence Level), a preview area where each bounding box returned by the model is drawn on top of the predicted frame (using Fabric.JS), and a table for the last 10 prediction results.
 
 # Technologies
 
@@ -41,12 +31,11 @@ The task is to create a frontend that interfaces with the backend, plays a video
 
 # Features
 
-- Upload a video in MP4 format
-- Capture each frame image from the video
-- Acess all the frames extracted from the video
-- Preview area to show all the prediction results from the selected frame
-- Table showing the last 10 prediction results from the selected frame
-- Configuration area for model settings (IoU and Confidence Level)
+- Uploading a video in MP4 format
+- Access all the frames extracted from the video
+- Access a Preview area that shows all prediction results and bounding boxes from the selected frame
+- Access a Results table showing the last 10 prediction results from the selected frame
+- Access a configuration area for model settings (IoU and Confidence level)
 
 # How to Run
 
@@ -61,14 +50,14 @@ $ cd /overview-ai-project
 
 ```
 
-## Back-end
+## Back-end & Database
 
 ```bash
 # Enter the server folder
 
 $ cd ai_model
 ```
-Before install the server dependencies, configure the database .env variable:
+Before install the ai_model dependencies, configure the database .env variable:
 ## 🔑 .env
 
 key|value
@@ -84,28 +73,53 @@ $ docker build -t overview-ai-project .
 
 $ docker run --name postgresql-overview-ai-project -e POSTGRES_PASSWORD=postgres -p 5433:5432 -d postgres
 
-# Run the Docker API container (After you run it, the code should execute the SQL to create the database tables)
+# Run the Docker Python API container
 
 docker run --env-file .env --network overview-ai-network -p 5001:5000 overview-ai-project
+```
 
-# In case that you receive an error connection on running the database, do the following steps
+In case that you receive an error connection on running the database, do the following steps:
 
-# Create a dedicated network for the connection between the Docker PostgreSQL container and the Docker API container
+```bash
+# Create a dedicated network for the connection between the Docker PostgreSQL container and the Docker Python API container
 
 docker network create overview-ai-network
 
-# Link the Docker PostgreSQL container with the Docker API container
+# Link the Docker PostgreSQL container with the Docker Python API container
 
 docker network connect overview-ai-network postgres-overview-ai-project
 
-# Run the Docker API container again
+# Run the Docker Python API container again
 docker run --env-file .env --network overview-ai-network -p 5001:5000 overview-ai-project
+```
+
+Once you run the Docker Python API container, 2 SQL queries will be executed to create 2 database schemas:
+
+```sql
+    CREATE TABLE IF NOT EXISTS frame (
+        id SERIAL PRIMARY KEY,
+        frame_reference VARCHAR(100) NOT NULL
+    );
+```
+
+```sql
+    CREATE TABLE IF NOT EXISTS prediction_result (
+        id SERIAL PRIMARY KEY,
+        box JSONB NOT NULL,
+        class_name VARCHAR(100) NOT NULL,
+        confidence FLOAT NOT NULL,
+        frame_id INTEGER NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        CONSTRAINT fk_frame FOREIGN KEY (frame_id) 
+            REFERENCES frame (id) 
+            ON DELETE CASCADE
+    );
 ```
 
 ## Front-end
 
 ```bash
-# Enter the client folder
+# Enter on the client folder
 
 $ cd client
 
