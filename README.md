@@ -4,8 +4,8 @@
 
 - Technologies
 - Features
-- How To Run
 - Diagrams
+- How To Run
 - Author
 
 # Technologies
