@@ -37,6 +37,20 @@
 - Access a Results table showing the last 10 prediction results from the selected frame
 - Access a configuration area for model settings (IoU and Confidence level)
 
+# Diagrams
+
+## Database relation
+
+<img src="./client/assets/database_relation.png">
+
+## API architecture
+
+<img src="./client/assets/api_architecture.png">
+
+## Application flow
+
+<img src="./client/assets/diagram_app_flow.png">
+
 # How to Run
 
 ```bash
@@ -44,7 +58,7 @@
 
 $ git clone https://github.com/cassiocappellari/overview-ai-project
 
-# Enter the project folder
+# Enter on the project folder
 
 $ cd /overview-ai-project
 
@@ -53,7 +67,7 @@ $ cd /overview-ai-project
 ## Back-end & Database
 
 ```bash
-# Enter the server folder
+# Enter on the ai_model folder
 
 $ cd ai_model
 ```
@@ -135,20 +149,6 @@ $ yarn start
 
 http://localhost:3000
 ```
-
-# Diagrams
-
-## Database relation
-
-<img src="./client/assets/database_relation.png">
-
-## API architecture
-
-<img src="./client/assets/api_architecture.png">
-
-## Application flow
-
-<img src="./client/assets/diagram_app_flow.png">
 
 # 👨‍🚀 Author
 
