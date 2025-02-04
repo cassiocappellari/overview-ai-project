@@ -31,11 +31,11 @@
 
 # Features
 
-- Uploading a video in MP4 format
-- Access all the frames extracted from the video
-- Access a Preview area that shows all prediction results and bounding boxes from the selected frame
-- Access a Results table showing the last 10 prediction results from the selected frame
-- Access a Configuration area for model settings (IoU and Confidence level)
+- Access Video player area for uploading videos in MP4 format
+- Access to all the frames extracted from the video
+- Access Preview area that shows all prediction results and bounding boxes from the selected frames
+- Access Results table showing the last 10 prediction results from the selected frames
+- Access Configuration area for model settings (IoU and Confidence levels)
 
 # Diagrams
 
@@ -183,48 +183,6 @@ Simple and basic API layered architecture, where:
 			"frame_id": 1,
 			"frame_reference": "frame_001.png",
 			"id": 6
-		},
-		{
-			"box": {
-				"height": 160,
-				"left": 1747,
-				"top": 1333,
-				"width": 103
-			},
-			"class_name": "person",
-			"confidence": 0.6695649027824402,
-			"created_at": "2025-02-03T21:36:36.287512",
-			"frame_id": 1,
-			"frame_reference": "frame_001.png",
-			"id": 7
-		},
-		{
-			"box": {
-				"height": 226,
-				"left": 2086,
-				"top": 1283,
-				"width": 292
-			},
-			"class_name": "truck",
-			"confidence": 0.5897232890129089,
-			"created_at": "2025-02-03T21:36:36.287512",
-			"frame_id": 1,
-			"frame_reference": "frame_001.png",
-			"id": 8
-		},
-		{
-			"box": {
-				"height": 128,
-				"left": 2350,
-				"top": 1329,
-				"width": 168
-			},
-			"class_name": "car",
-			"confidence": 0.5128593444824219,
-			"created_at": "2025-02-03T21:36:36.287512",
-			"frame_id": 1,
-			"frame_reference": "frame_001.png",
-			"id": 9
 		}
 	]
 }
